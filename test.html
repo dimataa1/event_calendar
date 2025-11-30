@@ -1,0 +1,567 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Couple's Advent Calendar 💕 | 25 Days of Love</title>
+    <meta name="description" content="A romantic advent calendar with 25 days of love missions and adventures for couples. Celebrate the season with daily surprises and meaningful moments together." />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #8B0000 0%, #4A0000 50%, #2A0000 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container {
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Header Styles */
+        header {
+            align-items: center;
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease;
+        }
+
+        h1 {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: float 3s ease-in-out infinite;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            color: #FFE4E1;
+            font-size: 1.3em;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        /* Progress Tracker */
+        .progress-tracker {
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: #FFE4E1;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #E91E63 0%, #FFD700 100%);
+            transition: width 0.5s ease-out;
+            box-shadow: 0 0 20px rgba(233, 30, 99, 0.5);
+            border-radius: 20px;
+        }
+
+        .progress-message {
+            color: #FFE4E1;
+            font-size: 0.75em;
+            margin-top: 8px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Calendar Grid */
+        .calendar-grid {
+            align-items: center;
+            position: relative;
+            width: 100%;
+            max-width: 1400px;
+            min-height: 1500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+        }
+
+        /* Box Container */
+        .box-container {
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            animation: popIn 0.6s ease backwards;
+        }
+
+        .box-container:hover:not(.locked) {
+            transform: scale(1.1);
+        }
+
+        .box {
+            width: 140px;
+            height: 140px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .box-container.opening .box {
+            transform: rotateY(180deg);
+        }
+
+        .box-front, .box-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .box-front {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: 3px solid #8B2500;
+        }
+
+        .box-front.locked {
+            background: linear-gradient(135deg, #C0C0C0 0%, #808080 100%);
+            border: 3px solid #505050;
+            cursor: not-allowed;
+        }
+
+        .day-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #8B0000;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+        }
+
+        .heart-icon {
+            font-size: 1.8em;
+            margin-top: 5px;
+        }
+
+        .box-back {
+            background: linear-gradient(135deg, #FFE4E1 0%, #FFC0CB 100%);
+            transform: rotateY(180deg);
+            border: 3px solid #E91E63;
+        }
+
+        .mission-emoji {
+            font-size: 2.5em;
+            margin-bottom: 8px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        .mission-text {
+            font-size: 0.85em;
+            color: #8B0000;
+            text-align: center;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+
+        /* Floating Elements */
+        .snowflake, .floating-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .snowflake {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1em;
+            animation: fall linear infinite;
+        }
+
+        .floating-heart {
+            color: rgba(255, 192, 203, 0.4);
+            font-size: 1.5em;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            color: #FFE4E1;
+            font-size: 1.1em;
+            font-style: italic;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            10%, 30% {
+                transform: scale(0.9);
+            }
+            20%, 40%, 60%, 80% {
+                transform: scale(1.1);
+            }
+            50%, 70% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .subtitle {
+                font-size: 1em;
+            }
+            
+            .box {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .day-number {
+                font-size: 2em;
+            }
+            
+            .mission-emoji {
+                font-size: 1.8em;
+            }
+            
+            .mission-text {
+                font-size: 0.7em;
+            }
+
+            .calendar-grid {
+                min-height: 1300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💕 Our Advent Calendar 💕</h1>
+            <p class="subtitle">25 Days of Love & Adventures</p>
+            <div class="progress-tracker">
+                <div class="progress-header">
+                    <span>Progress</span>
+                    <span id="progress-text">0/25</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+                </div>
+                <p class="progress-message" id="progress-message">Keep unlocking our adventures! 💕</p>
+            </div>
+        </header>
+        
+        <div class="calendar-grid" id="calendar"></div>
+
+        <footer>
+            <p>Made with ❤️ for us</p>
+        </footer>
+    </div>
+
+    <script>
+        // Romantic missions for each day
+
+    const missions = [
+        { emoji: "💌", text: "Say one thing you're excited for" },    
+        { emoji: "💭", text: "Share what made you think of them" },       // Love letter
+        { emoji: "📸", text: "Finish the sentence: 'I love when you…'" }, // Camera/photo
+        { emoji: "🛁", text: "Spa day" },     
+        { emoji: "🧳", text: "Sofia trip" },                              // Travel bag
+        { emoji: "🍲", text: "Ratatouille dinner" },                       // Food/dish
+        { emoji: "🌠", text: "Share a tiny fantasy date idea" },          // Shooting star/fantasy
+        { emoji: "✍️", text: "Tiny note for next time" },                 // Writing hand
+        { emoji: "🌅", text: "Invent a silly nickname for them" },        // Sunrise/fun
+        { emoji: "😄", text: "If you were here now, I’d…" },             // Smile
+        { emoji: "🎵", text: "Share a song that reminds you of them" },   // Music note
+        { emoji: "🍫", text: "Pick a treat for them" },                   // Chocolate
+        { emoji: "✈️", text: "Greece together" },                         // Airplane/travel
+        { emoji: "📖", text: "Name one thing you want to learn together" }, // Book/learning
+        { emoji: "🧸", text: "Send something that reminds you of them" }, // Teddy bear
+        { emoji: "✉️", text: "Choose one place in BG to visit someday" }, // Envelope/mail
+        { emoji: "🎨", text: "Each choose a favorite memory from the relationship" }, // Palette/art
+        { emoji: "💖", text: "Say one thing you appreciate about the other" }, // Sparkling heart
+        { emoji: "🎮", text: "Chivia igroteka" },             // Map
+        { emoji: "🍽️", text: "Suggest a next-date activity" },           // Plate/fork
+        { emoji: "🌟", text: "Share a hope for next year" },             // Star/future
+        { emoji: "📦", text: "Share the moment you last thought of them today" }, // Box/gift
+        { emoji: "🎱", text: "Pool date" }, // Pool/fun activity
+        { emoji: "❤️", text: "Say one real reason you love them" },       // Heart
+        { emoji: "🎁", text: "Christmas present exchange" }              // Present/gift
+    ];
+
+        // Get current date info
+        const today = new Date();
+        const currentDay = today.getDate();
+
+        // Create snowflakes
+        function createSnowflakes() {
+            const body = document.body;
+            for (let i = 0; i < 50; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerHTML = '❄';
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.top = '-10px';
+                snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                snowflake.style.fontSize = (Math.random() * 0.5 + 0.5) + 'em';
+                body.appendChild(snowflake);
+            }
+        }
+
+        // Create floating hearts
+        function createFloatingHearts() {
+            const body = document.body;
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.innerHTML = '♥';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.fontSize = (Math.random() * 1 + 1) + 'em';
+                heart.style.animationDelay = Math.random() * 3 + 's';
+                heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                body.appendChild(heart);
+            }
+        }
+
+        // Heart-shaped positioning
+        function getHeartPosition(index, total) {
+            const isMobile = window.innerWidth < 768;
+            const spacing = isMobile ? 110 : 160;
+            
+            // Heart shape - 9 rows to accommodate 25 boxes
+            const rows = [
+                { count: 2, y: 0, offset: 3 },      
+                { count: 4, y: 1, offset: 2 },      
+                { count: 5, y: 2, offset: 1.5 },    
+                { count: 5, y: 3, offset: 1.5 },    
+                { count: 4, y: 4, offset: 2 },      
+                { count: 3, y: 5, offset: 2.5 },    
+                { count: 2, y: 6, offset: 3 },      
+                { count: 1, y: 7, offset: 3.5 },
+                { count: 1, y: 8.5, offset: 3.5 }   // Christmas Day at the very bottom
+            ];
+
+            let currentIndex = 0;
+            let rowIndex = 0;
+            let positionInRow = 0;
+
+            for (let i = 0; i < rows.length; i++) {
+                if (index < currentIndex + rows[i].count) {
+                    rowIndex = i;
+                    positionInRow = index - currentIndex;
+                    break;
+                }
+                currentIndex += rows[i].count;
+            }
+
+            const row = rows[rowIndex];
+            const centerX = isMobile ? window.innerWidth / 2 : 700;
+            const rowWidth = row.count * spacing;
+            const startX = centerX - (rowWidth / 2) + (spacing / 2);
+            
+            const x = startX + (positionInRow * spacing);
+            const y = 50 + (row.y * (spacing - 20));
+
+            return { x, y };
+        }
+
+        // Load opened boxes from localStorage
+        function getOpenedBoxes() {
+            const stored = localStorage.getItem('adventCalendarOpened');
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        // Save opened box
+        function saveOpenedBox(day) {
+            const opened = getOpenedBoxes();
+            if (!opened.includes(day)) {
+                opened.push(day);
+                localStorage.setItem('adventCalendarOpened', JSON.stringify(opened));
+            }
+            updateProgress();
+        }
+
+        // Update progress tracker
+        function updateProgress() {
+            const opened = getOpenedBoxes().length;
+            const total = 25;
+            const percentage = (opened / total) * 100;
+            
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = opened + '/' + total;
+            
+            const message = opened === total 
+                ? "All missions completed! 🎉" 
+                : "Keep unlocking our adventures! 💕";
+            document.getElementById('progress-message').textContent = message;
+        }
+
+        // Create calendar
+        function createCalendar() {
+            const calendar = document.getElementById('calendar');
+            calendar.innerHTML = '';
+            const openedBoxes = getOpenedBoxes();
+
+            missions.forEach((mission, index) => {
+                const day = index + 1;
+                const pos = getHeartPosition(index, missions.length);
+                const isOpened = openedBoxes.includes(day);
+                const canOpen = day <= currentDay;
+
+                const boxContainer = document.createElement('div');
+                boxContainer.className = 'box-container';
+                if (isOpened) boxContainer.classList.add('opening');
+                if (!canOpen) boxContainer.classList.add('locked');
+                boxContainer.style.left = pos.x + 'px';
+                boxContainer.style.top = pos.y + 'px';
+                boxContainer.style.animationDelay = (index * 0.05) + 's';
+
+                const box = document.createElement('div');
+                box.className = 'box';
+
+                // Front of box
+                const front = document.createElement('div');
+                front.className = 'box-front';
+                if (!canOpen) front.classList.add('locked');
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = day;
+                
+                const heart = document.createElement('div');
+                heart.className = 'heart-icon';
+                heart.textContent = canOpen ? '❤️' : '🔒';
+                
+                front.appendChild(dayNumber);
+                front.appendChild(heart);
+
+                // Back of box
+                const back = document.createElement('div');
+                back.className = 'box-back';
+                
+                const emoji = document.createElement('div');
+                emoji.className = 'mission-emoji';
+                emoji.textContent = mission.emoji;
+                
+                const text = document.createElement('div');
+                text.className = 'mission-text';
+                text.textContent = mission.text;
+                
+                back.appendChild(emoji);
+                back.appendChild(text);
+
+                box.appendChild(front);
+                box.appendChild(back);
+                boxContainer.appendChild(box);
+
+                // Click handler
+                boxContainer.addEventListener('click', () => {
+                    if (!canOpen) {
+                        alert('🔒 This box will unlock on December ' + day + '!');
+                        return;
+                    }
+                    if (!isOpened) {
+                        boxContainer.classList.add('opening');
+                        saveOpenedBox(day);
+                    }
+                });
+
+                calendar.appendChild(boxContainer);
+            });
+
+            updateProgress();
+        }
+
+        // Initialize
+        createSnowflakes();
+        createFloatingHearts();
+        createCalendar();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            createCalendar();
+        });
+    </script>
+</body>
+</html>
