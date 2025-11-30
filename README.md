@@ -1,5 +1,7 @@
 Couples Advent Calendar – 25 Days of Love
 Abstract
+<img width="944" height="834" alt="image" src="https://github.com/user-attachments/assets/f3e32aae-5942-4167-b5e5-35c68f7bcb53" />
+
 
 This project implements an interactive advent calendar designed for couples. It consists of 25 daily activities that unlock automatically according to the current date. The interface arranges all calendar units into a heart-shaped layout. The project is fully responsive, uses no external frameworks, and maintains user progress through localStorage.
 
